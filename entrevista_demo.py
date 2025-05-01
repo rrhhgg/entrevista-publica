@@ -88,5 +88,11 @@ Devuelve:
             st.text_area("Evaluación GPT", resultado['evaluacion'], height=120, key=f"resultado_{i}")
 
         resumen = " ".join([r['evaluacion'] for r in resultados])
-        enviar_a_monday(nombre=nombre, puesto="Camarero", puntuacion_total=puntuacion_total, evaluacion_texto=resumen)
-        st.success("✅ Entrevista registrada en Monday.com")
+        respuesta_monday = enviar_a_monday(
+            nombre=nombre,
+            puesto="Camarero",
+            puntuacion_total=puntuacion_total,
+            evaluacion_texto=resumen
+        )
+        st.success("✅ Entrevista enviada")
+        st.write("🔍 Respuesta de Monday:", respuesta_monday)
