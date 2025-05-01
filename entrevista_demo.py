@@ -6,7 +6,7 @@ from enviar_a_monday import enviar_a_monday
 from PIL import Image
 
 # Mostrar logo actualizado
-logo = Image.open("logo gg.png.png")
+logo = Image.open("logo gg.png")
 st.image(logo, use_container_width=True)
 
 # Cargar preguntas
