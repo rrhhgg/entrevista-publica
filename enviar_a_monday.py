@@ -19,10 +19,10 @@ def enviar_a_monday(nombre, puesto, puntuacion_total, evaluacion_texto):
                 board_id: 1939525964,
                 item_name: "{nombre}",
                 column_values: {{
-                  \"texto\": "{puesto}",
-                  \"fecha\": {{ \"date\": "{fecha_actual}" }},
-                  \"números\": "{puntuacion_total}",
-                  \"texto8\": "{evaluacion_texto}"
+                  "dropdown_mkqhgq7t": "{{\"labels\":[\"{puesto}\"]}}",
+                  "date": {{ "date": "{fecha_actual}" }},
+                  "numeric_mkqhfqy3": "{puntuacion_total}",
+                  "text_mkqhc1ck": "{evaluacion_texto}"
                 }}
               ) {{
                 id
