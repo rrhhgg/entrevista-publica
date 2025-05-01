@@ -1,0 +1,22 @@
+[
+  {
+    "pregunta": "Estás atendiendo cuatro mesas que han llegado con poco margen entre ellas. ¿Cómo decides a cuál atender primero?",
+    "respuestas_tipo": {
+      "1": "Saludo brevemente a todas las mesas para que se sientan atendidas y empiezo por la que parece tener más prisa (miradas, actitud).",
+      "2": "Inicio por la mesa con menos comensales para agilizar el servicio y luego organizo el resto según cercanía.",
+      "3": "Organizo las mesas en función de la complejidad del pedido y del trayecto para reducir desplazamientos.",
+      "4": "Comienzo con la mesa más numerosa, ya que suelen tardar más en decidir, y así aprovecho para seguir avanzando con las otras.",
+      "5": "Sigo el orden FIFO (First In, First Out), atendiendo estrictamente según el orden de llegada para mantener imparcialidad."
+    }
+  },
+  {
+    "pregunta": "Si una mesa se queja porque su comida llega fría, ¿cómo actuarías para resolver la situación?",
+    "respuestas_tipo": {
+      "1": "Pido disculpas, retiro el plato inmediatamente y hablo con cocina para que lo rehagan lo antes posible. Informo al cliente del tiempo aproximado y ofrezco una bebida o detalle en compensación.",
+      "2": "Pido disculpas, retiro el plato y me aseguro de que lo pasen de nuevo por la plancha antes de volver a servirlo.",
+      "3": "Pido disculpas y le pregunto al cliente si desea que lo cambiemos o si desea que lo caliente yo mismo.",
+      "4": "Pido disculpas, aviso al director o encargado para que decida qué hacer.",
+      "5": "Intento justificar la situación con alguna excusa (por ejemplo, mucho trabajo en cocina) y no hago cambios salvo que insistan."
+    }
+  }
+]
