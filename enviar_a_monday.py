@@ -12,14 +12,12 @@ def enviar_a_monday(nombre, puesto, puntuacion_total, evaluacion_texto):
     fecha_actual = datetime.today().strftime('%Y-%m-%d')
     evaluacion_texto = evaluacion_texto.replace('"', "'")[:500]
 
-    column_values = {
+    column_values = json.dumps({
         "dropdown_mkqhgq7t": { "labels": [puesto] },
         "date": { "date": fecha_actual },
         "numeric_mkqhfqy3": puntuacion_total,
         "text_mkqhc1ck": evaluacion_texto
-    }
-
-    column_values_str = json.dumps(column_values).replace('"', '\"')
+    })
 
     query = {
         "query": f"""
@@ -27,7 +25,7 @@ def enviar_a_monday(nombre, puesto, puntuacion_total, evaluacion_texto):
               create_item (
                 board_id: 1939525964,
                 item_name: "{nombre}",
-                column_values: "{column_values_str}"
+                column_values: {json.dumps(column_values)}
               ) {{
                 id
               }}
