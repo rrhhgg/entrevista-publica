@@ -19,13 +19,15 @@ def enviar_a_monday(nombre, puesto, puntuacion_total, evaluacion_texto):
         "text_mkqhc1ck": evaluacion_texto
     }
 
+    column_values_str = json.dumps(column_values).replace('"', '\"')
+
     query = {
         "query": f"""
             mutation {{
               create_item (
                 board_id: 1939525964,
                 item_name: "{nombre}",
-                column_values: "{json.dumps(column_values).replace('"', '\\"')}"
+                column_values: "{column_values_str}"
               ) {{
                 id
               }}
