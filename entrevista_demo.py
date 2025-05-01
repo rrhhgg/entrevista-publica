@@ -5,19 +5,22 @@ from datetime import datetime
 from enviar_a_monday import enviar_a_monday
 from PIL import Image
 
-# Mostrar logo actualizado
+st.set_page_config(page_title="Entrevista Camarero", layout="centered")
+
+# Mostrar logo
 logo = Image.open("logo gg.png")
 st.image(logo, use_container_width=True)
-
-# Cargar preguntas
-with open("estructura_preguntas_demo.json", encoding="utf-8") as f:
-    preguntas = json.load(f)
 
 st.title("Entrevista para Camarero - Grupo Gómez")
 st.write("Por favor, responde a las siguientes preguntas con sinceridad.")
 
-# Nombre del candidato
+# Datos iniciales
 nombre = st.text_input("Nombre del candidato")
+correo_entrevistador = st.text_input("Correo del entrevistador")
+
+# Cargar preguntas
+with open("estructura_preguntas_demo.json", encoding="utf-8") as f:
+    preguntas = json.load(f)
 
 respuestas_usuario = []
 
@@ -32,8 +35,8 @@ for i, item in enumerate(preguntas):
     })
 
 if st.button("Evaluar entrevista"):
-    if not nombre:
-        st.warning("⚠️ Por favor, introduce el nombre del candidato antes de evaluar.")
+    if not nombre or not correo_entrevistador:
+        st.warning("⚠️ Por favor, introduce el nombre del candidato y el correo del entrevistador.")
     else:
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
         resultados = []
@@ -92,7 +95,9 @@ Devuelve:
             nombre=nombre,
             puesto="Camarero",
             puntuacion_total=puntuacion_total,
-            evaluacion_texto=resumen
+            evaluacion_texto=resumen,
+            correo_entrevistador=correo_entrevistador
         )
-        st.success("✅ Entrevista enviada")
-        st.write("🔍 Respuesta de Monday:", respuesta_monday)
+        st.success("✅ Entrevista registrada en Monday.com")
+        st.subheader("🔍 Respuesta de Monday")
+        st.json(respuesta_monday)
