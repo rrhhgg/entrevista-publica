@@ -1,6 +1,5 @@
 import streamlit as st
 from PIL import Image
-import base64
 
 st.set_page_config(page_title="Selector de entrevista", layout="centered")
 
@@ -11,20 +10,20 @@ st.image(logo, use_container_width=True)
 st.title("Selecciona el tipo de entrevista")
 st.markdown("Elige el puesto para comenzar la evaluación:")
 
-# Diccionario de botones
+# Lista de opciones y sus enlaces
 opciones = {
     "🍽️ Camarero": "https://rrhhgg-entrevista-publica.streamlit.app",
-    "🔪 Cocinero": "#",
-    "👨‍🍳 Jefe de Cocina": "#",
-    "👔 Director": "#",
-    "🧼 Friegaplatos": "#",
-    "🚚 Repartidor": "#",
-    "👩‍✈️ Hostess": "#"
+    "🔪 Cocinero": None,
+    "👨‍🍳 Jefe de Cocina": None,
+    "👔 Director": None,
+    "🧼 Friegaplatos": None,
+    "🚚 Repartidor": None,
+    "👩‍✈️ Hostess": None
 }
 
-# Mostrar los botones
 for nombre, enlace in opciones.items():
-    if enlace != "#":
-        st.markdown(f"[{nombre}](%s)" % enlace, unsafe_allow_html=True)
+    if enlace:
+        if st.button(nombre):
+            st.markdown(f'<meta http-equiv="refresh" content="0; url={enlace}" />', unsafe_allow_html=True)
     else:
         st.button(nombre, disabled=True)
