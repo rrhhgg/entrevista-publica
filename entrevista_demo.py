@@ -1,6 +1,7 @@
 import streamlit as st
 import openai
 import json
+import re
 from datetime import datetime
 from enviar_a_monday import enviar_a_monday
 from PIL import Image
@@ -77,8 +78,8 @@ Devuelve:
                 resultado_texto = f"Error al evaluar: {e}"
 
             try:
-                lineas = resultado_texto.splitlines()
-                puntuacion = int(next((l for l in lineas if l.strip().isdigit()), "0"))
+                match = re.search(r"\b(10|[2-9])\b", resultado_texto)
+                puntuacion = int(match.group(1)) if match else 0
             except:
                 puntuacion = 0
 
@@ -86,6 +87,7 @@ Devuelve:
             resultados.append({"pregunta": item["pregunta"], "evaluacion": resultado_texto})
 
         st.subheader("Resultados")
+        st.markdown(f"**Puntuación total:** {puntuacion_total} puntos")
         for i, resultado in enumerate(resultados):
             st.markdown(f"**Pregunta {i + 1}:** {resultado['pregunta']}")
             st.text_area("Evaluación GPT", resultado['evaluacion'], height=120, key=f"resultado_{i}")
