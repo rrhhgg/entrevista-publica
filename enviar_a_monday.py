@@ -9,22 +9,25 @@ def enviar_a_monday(nombre, puesto, puntuacion_total, evaluacion_texto):
         "Content-Type": "application/json"
     }
 
+    fecha_actual = datetime.today().strftime('%Y-%m-%d')
+    evaluacion_texto = evaluacion_texto.replace('"', "'")[:500]
+
     query = {
         "query": f"""
-        mutation {{
-          create_item (
-            board_id: 1939525964,
-            item_name: "{nombre}",
-            column_values: {{
-              "texto": "{puesto}",
-              "fecha": {{ "date": "{datetime.today().strftime('%Y-%m-%d')}" }},
-              "números": "{puntuacion_total}",
-              "texto8": "{evaluacion_texto.replace('"', "'')[:500]}"
+            mutation {{
+              create_item (
+                board_id: 1939525964,
+                item_name: "{nombre}",
+                column_values: {{
+                  \"texto\": "{puesto}",
+                  \"fecha\": {{ \"date\": "{fecha_actual}" }},
+                  \"números\": "{puntuacion_total}",
+                  \"texto8\": "{evaluacion_texto}"
+                }}
+              ) {{
+                id
+              }}
             }}
-          ) {{
-            id
-          }}
-        }}
         """
     }
 
