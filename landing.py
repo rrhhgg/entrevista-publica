@@ -10,7 +10,7 @@ st.image(logo, use_container_width=True)
 st.title("Selecciona el tipo de entrevista")
 st.markdown("Elige el puesto para comenzar la evaluación:")
 
-# Lista de opciones y sus enlaces
+# Diccionario de botones
 opciones = {
     "🍽️ Camarero": "https://rrhhgg-entrevista-publica.streamlit.app",
     "🔪 Cocinero": None,
@@ -21,9 +21,17 @@ opciones = {
     "👩‍✈️ Hostess": None
 }
 
+# Mostrar los botones en filas de 3
+cols = st.columns(3)
+i = 0
 for nombre, enlace in opciones.items():
+    col = cols[i % 3]
     if enlace:
-        if st.button(nombre):
-            st.markdown(f'<meta http-equiv="refresh" content="0; url={enlace}" />', unsafe_allow_html=True)
+        col.markdown(
+            f'<a href="{enlace}" target="_blank">'
+            f'<button style="width:100%;padding:0.75em;font-size:1.1em;">{nombre}</button></a>',
+            unsafe_allow_html=True
+        )
     else:
-        st.button(nombre, disabled=True)
+        col.button(nombre, disabled=True)
+    i += 1
