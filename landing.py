@@ -10,9 +10,9 @@ st.image(logo, use_container_width=True)
 st.title("Selecciona el tipo de entrevista")
 st.markdown("Elige el puesto para comenzar la evaluación:")
 
-# Botones configurados
+# Diccionario de botones con el enlace corregido
 puestos = {
-    "🍽️ Camarero": "https://rrhhgg-entrevista-publica.streamlit.app",
+    "🍽️ Camarero": "https://entrevista-publica-c6bp26qxquuj2obdoizn9j.streamlit.app/",
     "🔪 Cocinero": None,
     "👨‍🍳 Jefe de Cocina": None,
     "👔 Director": None,
@@ -21,7 +21,7 @@ puestos = {
     "👩‍✈️ Hostess": None
 }
 
-# Mostrar en filas de 3
+# Mostrar botones en filas de 3
 cols = st.columns(3)
 i = 0
 for puesto, url in puestos.items():
