@@ -13,22 +13,8 @@ logo = Image.open("logo gg.png")
 st.image(logo, use_container_width=True)
 
 st.title("Entrevista Camarero")
-st.subheader("Datos del candidato")
-nombre = st.text_input("Nombre completo")
-telefono = st.text_input("Teléfono de contacto")
-email = st.text_input("Correo electrónico")
 
-st.subheader("Domicilio")
-via = st.selectbox("Tipo de vía", ["Calle", "Avenida", "Plaza", "Camino", "Carretera", "Otra"])
-nombre_calle = st.text_input("Nombre de la calle")
-numero = st.text_input("Número")
-puerta = st.text_input("Puerta / Piso")
-cp = st.text_input("Código Postal")
-ciudad = st.text_input("Ciudad")
-
-with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
-    preguntas = json.load(f)
-
+# Inicializar estado
 if "page" not in st.session_state:
     st.session_state.page = 0
     st.session_state.respuestas = []
@@ -37,12 +23,31 @@ if "page" not in st.session_state:
     st.session_state.tiempos = []
     st.session_state.start_time = time.time()
 
+# Cargar preguntas
+with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
+    preguntas = json.load(f)
+
+# Página 0: datos personales
 if st.session_state.page == 0:
+    st.subheader("Datos del candidato")
+    st.session_state.nombre = st.text_input("Nombre completo")
+    st.session_state.telefono = st.text_input("Teléfono de contacto")
+    st.session_state.email = st.text_input("Correo electrónico")
+
+    st.subheader("Domicilio")
+    st.session_state.via = st.selectbox("Tipo de vía", ["Calle", "Avenida", "Plaza", "Camino", "Carretera", "Otra"])
+    st.session_state.nombre_calle = st.text_input("Nombre de la calle")
+    st.session_state.numero = st.text_input("Número")
+    st.session_state.puerta = st.text_input("Puerta / Piso")
+    st.session_state.cp = st.text_input("Código Postal")
+    st.session_state.ciudad = st.text_input("Ciudad")
+
     if st.button("Comenzar entrevista"):
         st.session_state.page = 1
         st.session_state.start_time = time.time()
 
-elif st.session_state.page <= len(preguntas):
+# Páginas de preguntas
+elif 1 <= st.session_state.page <= len(preguntas):
     actual = preguntas[st.session_state.page - 1]
     st.subheader(f"{actual['categoria']} - Pregunta {st.session_state.page}")
     st.write(actual["pregunta"])
@@ -52,10 +57,7 @@ elif st.session_state.page <= len(preguntas):
     tiempo_restante = max(0, 120 - tiempo_transcurrido)
     st.caption(f"⏳ Tiempo restante: {tiempo_restante} segundos")
 
-    col1, col2 = st.columns([2, 1])
-    avanzar = col1.button("Enviar respuesta", key=f"enviar_{st.session_state.page}")
-
-    if avanzar or tiempo_restante == 0:
+    if st.button("Enviar respuesta"):
         st.session_state.respuestas.append({
             "pregunta": actual["pregunta"],
             "respuesta": respuesta,
@@ -65,12 +67,13 @@ elif st.session_state.page <= len(preguntas):
         st.session_state.tiempos.append(tiempo_transcurrido)
         st.session_state.page += 1
         st.session_state.start_time = time.time()
-        st.experimental_rerun()
 
+# Evaluación final
 else:
     with st.spinner("Evaluando respuestas..."):
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
         total_puntos = 0
+
         for r in st.session_state.respuestas:
             prompt = f"Pregunta: {r['pregunta']}\n\nRespuestas tipo:\n"
             for clave, valor in r["respuestas_tipo"].items():
@@ -103,7 +106,7 @@ else:
         tiempo_total = sum(st.session_state.tiempos)
 
         enviar_a_monday(
-            nombre=nombre,
+            nombre=st.session_state.nombre,
             puesto="Camarero",
             puntuacion_total=total_puntos,
             evaluacion_texto=resumen,
@@ -111,14 +114,14 @@ else:
             puntuaciones=st.session_state.puntuaciones,
             evaluaciones=st.session_state.evaluaciones,
             tiempo_total=tiempo_total,
-            telefono=telefono,
-            email=email,
-            via=via,
-            calle=nombre_calle,
-            numero=numero,
-            puerta=puerta,
-            cp=cp,
-            ciudad=ciudad
+            telefono=st.session_state.telefono,
+            email=st.session_state.email,
+            via=st.session_state.via,
+            calle=st.session_state.nombre_calle,
+            numero=st.session_state.numero,
+            puerta=st.session_state.puerta,
+            cp=st.session_state.cp,
+            ciudad=st.session_state.ciudad
         )
 
         st.success("✅ Entrevista registrada correctamente.")
