@@ -12,7 +12,7 @@ st.set_page_config(page_title="Entrevista Camarero (Final)", layout="centered")
 logo = Image.open("logo gg.png")
 st.image(logo, use_container_width=True)
 
-st.title("Entrevista Final - Camarero")
+st.title("Entrevista Camarero")
 st.write("Por favor, completa tus datos personales antes de comenzar la entrevista.")
 
 # Datos personales
