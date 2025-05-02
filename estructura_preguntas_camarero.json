@@ -1,0 +1,72 @@
+[
+  {
+    "categoria": "Generales",
+    "pregunta": "1: ¿A qué distancia vives del lugar de trabajo y cómo llegarías habitualmente (a pie, transporte público, vehículo propio, bici, etc.)? En el caso de depender de transporte público como gestionarías el transporte fuera de los horarios de servicio del metro?",
+    "respuestas_tipo": {
+      "10 puntos": "Vive cerca o tiene transporte directo fiable (p. ej. va caminando, en bici o en coche propio sin tráfico complicado, patinete sin vivir muy lejos, moto).",
+      "8 puntos": "Transporte público directo o con poco transbordo y tiempo razonable. Fuera del horario de servicio del transporte tiene alternativas fiables.",
+      "6 puntos": "Medio inestable (tráfico muy variable, muchos transbordos, vive a más de 45 minutos).",
+      "1 puntos": "Vive lejos sin transporte, ha tenido problemas de asistencia en el pasado por esta razón."
+    }
+  },
+  {
+    "categoria": "Generales",
+    "pregunta": "2 ¿Qué idiomas hablas y qué nivel tienes en cada uno (básico, intermedio, avanzado, bilingüe incluso el Español )?",
+    "respuestas_tipo": {
+      "10 puntos": "Inglés avanzado o bilingüe y habla más de un idioma útil (italiano, francés, alemán, etc.).",
+      "8 puntos": "Inglés intermedio sólido, capaz de mantener conversación básica con clientes en hosteleria. No habla otros idiomas pero entiende los clientes puesto que ha trabajado en lugares turísticos.",
+      "6 puntos": "Inglés básico, se defiende mínimamente pero puede entender un pedido.",
+      "1 punto": "No habla inglés ni otro idioma, o lo exagera sin fundamentos. En este punto ten en cuenta la coletilla de abajo."
+    }
+  },
+  {
+    "categoria": "Generales",
+    "pregunta": "3. Resume brevemente los motivos por los que dejaste tus tres últimos trabajos indicando en cada uno cuanto tiempo aproximativamente estuviste trabajando.",
+    "respuestas_tipo": {
+      "10 puntos": "Habla bien del ambiente anterior, menciona colaboración, compañerismo, incluso cuando hubo retos. Sus motivos de cambio fueron mayormente alimentados por su mejora profesional pero es agradecido por lo que ha estado aprendiendo.",
+      "8 puntos": "Describe el ambiente de forma neutral y su rol fue positivo o adaptable. Puede haber tenido tensiones con los responsables pero las asume como normales dentro de las dinámicas laborales.",
+      "6 puntos": "Muestra cierta incomodidad con equipos pasados, pero sin lenguaje tóxico.",
+      "1 punto": "Habla negativamente de compañeros o jefes sin justificaciones solidas, se victimiza, o muestra señales de conflicto recurrente."
+    }
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "1: Estás atendiendo cuatro mesas que han llegado con poco margen entre ellas. ¿Cómo decides a cuál atender primero?",
+    "respuestas_tipo": {}
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "2: Háblame de una ocasión en la que ayudaste a un compañero que iba atrasado en su trabajo, aunque tú ya habías terminado tus tareas. ¿Qué te motivó a hacerlo y cómo reaccionó el equipo?",
+    "respuestas_tipo": {}
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "3. Cuéntame sobre una ocasión en la que un cliente te dijo que un plato no estaba a su gusto, aunque ya lo había comido casi entero. ¿Cómo respondiste y qué hiciste para manejar la situación?",
+    "respuestas_tipo": {}
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "4. En el briefing antes del servicio, tu director repasando el servicio anterior, te indica que estás marcando mal los cubiertos. ¿Qué haces?",
+    "respuestas_tipo": {}
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "Estás en el pase y ves que un plato está listo pero nadie lo recoge. No es para tu mesa. ¿Qué haces?",
+    "respuestas_tipo": {}
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "Cuéntame sobre una ocasión en la que una mesa ya había pedido lo justo para cenar. ¿Qué hiciste?",
+    "respuestas_tipo": {}
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "Has terminado tu servicio y estás a punto de irte. ¿Cómo dejas tu zona de trabajo?",
+    "respuestas_tipo": {}
+  },
+  {
+    "categoria": "Camarero",
+    "pregunta": "Cuéntame sobre una ocasión en la que cometiste un error al tomar una comanda y se lo serviste mal al cliente. Por ejemplo, que te pidieran un arroz meloso y llegara uno seco. ¿Cómo lo gestionaste?",
+    "respuestas_tipo": {}
+  }
+]
