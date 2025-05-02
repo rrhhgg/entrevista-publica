@@ -17,7 +17,6 @@ st.write("Por favor, responde con sinceridad. Esta entrevista está compuesta po
 
 # Datos del candidato
 nombre = st.text_input("Nombre del candidato")
-correo_entrevistador = st.text_input("Correo del entrevistador")
 
 # Cargar estructura de preguntas
 with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
@@ -37,8 +36,8 @@ for i, item in enumerate(preguntas):
     })
 
 if st.button("Evaluar entrevista"):
-    if not nombre or not correo_entrevistador:
-        st.warning("⚠️ Por favor, introduce el nombre del candidato y el correo del entrevistador.")
+    if not nombre:
+        st.warning("⚠️ Por favor, introduce el nombre del candidato.")
     else:
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
         resultados = []
@@ -104,7 +103,7 @@ Devuelve solo:
             puesto="Camarero",
             puntuacion_total=puntuacion_total,
             evaluacion_texto=resumen,
-            correo_entrevistador=correo_entrevistador
+            correo_entrevistador=None  # Será reemplazado desde login en el futuro
         )
         st.success("✅ Entrevista registrada en Monday.com")
         st.subheader("🔍 Respuesta de Monday")
