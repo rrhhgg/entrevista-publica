@@ -13,10 +13,20 @@ logo = Image.open("logo gg.png")
 st.image(logo, use_container_width=True)
 
 st.title("Entrevista Final - Camarero")
-st.write("Por favor, responde con sinceridad. Esta entrevista está compuesta por preguntas generales y específicas para el puesto.")
+st.write("Por favor, completa tus datos personales antes de comenzar la entrevista.")
 
-# Datos del candidato
-nombre = st.text_input("Nombre del candidato")
+# Datos personales
+nombre = st.text_input("Nombre completo")
+telefono = st.text_input("Teléfono de contacto")
+email = st.text_input("Correo electrónico")
+
+st.subheader("Domicilio")
+via = st.selectbox("Tipo de vía", ["Calle", "Avenida", "Plaza", "Camino", "Carretera", "Otra"])
+nombre_calle = st.text_input("Nombre de la calle")
+numero = st.text_input("Número")
+puerta = st.text_input("Puerta / Piso")
+cp = st.text_input("Código Postal")
+ciudad = st.text_input("Ciudad")
 
 # Cargar estructura de preguntas
 with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
@@ -36,8 +46,8 @@ for i, item in enumerate(preguntas):
     })
 
 if st.button("Evaluar entrevista"):
-    if not nombre:
-        st.warning("⚠️ Por favor, introduce el nombre del candidato.")
+    if not all([nombre, telefono, email, nombre_calle, numero, cp, ciudad]):
+        st.warning("⚠️ Por favor, completa todos los datos personales obligatorios.")
     else:
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
         resultados = []
@@ -96,12 +106,6 @@ Devuelve solo:
                 "puntuacion": puntuacion
             })
 
-        st.subheader("Resultados")
-        st.markdown(f"**Puntuación total:** {puntuacion_total} puntos")
-        for i, resultado in enumerate(resultados):
-            st.markdown(f"**[{resultado['categoria']}] Pregunta {i + 1}:** {resultado['pregunta']}")
-            st.text_area("Evaluación GPT", resultado['evaluacion'], height=120, key=f"resultado_{i}")
-
         resumen_general = " ".join([r['evaluacion'] for r in resultados])
         respuesta_monday = enviar_a_monday(
             nombre=nombre,
@@ -113,5 +117,4 @@ Devuelve solo:
             evaluaciones=evaluaciones
         )
         st.success("✅ Entrevista registrada en Monday.com")
-        st.subheader("🔍 Respuesta de Monday")
-        st.json(respuesta_monday)
+        st.markdown("Gracias por completar tu entrevista. Pronto nos pondremos en contacto contigo.")
