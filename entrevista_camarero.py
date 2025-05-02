@@ -42,6 +42,7 @@ if st.session_state.page == 0:
     if st.button("Comenzar entrevista"):
         st.session_state.page = 1
         st.session_state.start_time = time.time()
+        st.experimental_rerun()
 
 elif 1 <= st.session_state.page <= len(preguntas):
     actual = preguntas[st.session_state.page - 1]
@@ -116,9 +117,9 @@ else:
             email=st.session_state.email,
             via=st.session_state.via,
             calle=st.session_state.nombre_calle,
-            numero=st.session_state.numero,
-            puerta=st.session_state.puerta,
-            cp=st.session_state.cp,
+            numero=str(st.session_state.numero),
+            puerta=str(st.session_state.puerta),
+            cp=str(st.session_state.cp),
             ciudad=st.session_state.ciudad
         )
 
