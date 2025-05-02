@@ -41,6 +41,8 @@ if st.button("Evaluar entrevista"):
     else:
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
         resultados = []
+        puntuaciones = []
+        evaluaciones = []
         puntuacion_total = 0
 
         for i, item in enumerate(respuestas_usuario):
@@ -83,7 +85,10 @@ Devuelve solo:
             except:
                 puntuacion = 0
 
+            puntuaciones.append(puntuacion)
+            evaluaciones.append(resultado_texto[:500])
             puntuacion_total += puntuacion
+
             resultados.append({
                 "categoria": item["categoria"],
                 "pregunta": item["pregunta"],
@@ -97,13 +102,15 @@ Devuelve solo:
             st.markdown(f"**[{resultado['categoria']}] Pregunta {i + 1}:** {resultado['pregunta']}")
             st.text_area("Evaluación GPT", resultado['evaluacion'], height=120, key=f"resultado_{i}")
 
-        resumen = " ".join([r['evaluacion'] for r in resultados])
+        resumen_general = " ".join([r['evaluacion'] for r in resultados])
         respuesta_monday = enviar_a_monday(
             nombre=nombre,
             puesto="Camarero",
             puntuacion_total=puntuacion_total,
-            evaluacion_texto=resumen,
-            correo_entrevistador=None  # Será reemplazado desde login en el futuro
+            evaluacion_texto=resumen_general,
+            correo_entrevistador=None,
+            puntuaciones=puntuaciones,
+            evaluaciones=evaluaciones
         )
         st.success("✅ Entrevista registrada en Monday.com")
         st.subheader("🔍 Respuesta de Monday")
