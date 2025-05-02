@@ -15,6 +15,7 @@ st.image(logo, use_container_width=True)
 st.title("Entrevista Camarero")
 
 if "page" not in st.session_state:
+    st.session_state.ready = False
     st.session_state.page = 0
     st.session_state.respuestas = []
     st.session_state.puntuaciones = []
@@ -40,9 +41,11 @@ if st.session_state.page == 0:
     st.session_state.ciudad = st.text_input("Ciudad")
 
     if st.button("Comenzar entrevista"):
-        st.session_state.page = 1
-        st.session_state.start_time = time.time()
-        st.experimental_rerun()
+        st.session_state.ready = True
+
+if st.session_state.ready:
+    st.session_state.page = 1
+    st.session_state.start_time = time.time()
 
 elif 1 <= st.session_state.page <= len(preguntas):
     actual = preguntas[st.session_state.page - 1]
