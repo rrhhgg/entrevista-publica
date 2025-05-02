@@ -30,6 +30,16 @@
     }
   },
   {
+    "categoria": "Generales",
+    "pregunta": "¿Cómo describirías el ambiente de trabajo en tus últimos empleos? ¿Cómo te llevabas con tus compañeros y responsables?",
+    "respuestas_tipo": {
+      "10": "Habla bien del ambiente anterior, menciona colaboración, compañerismo, incluso cuando hubo retos. Sus motivos de cambio fueron mayormente alimentados por su mejora profesional pero es agradecido por lo que ha estado aprendiendo.",
+      "8": "Describe el ambiente de forma neutral y su rol fue positivo o adaptable. Puede haber tenido tensiones con los responsables pero las asume como normales dentro de las dinámicas laborales.",
+      "6": "Muestra cierta incomodidad con equipos pasados, pero sin lenguaje tóxico.",
+      "1": "Habla negativamente de compañeros o jefes sin justificaciones solidas, se victimiza, o muestra señales de conflicto recurrente."
+    }
+  },
+  {
     "categoria": "Camarero",
     "pregunta": "1: Estás atendiendo cuatro mesas que han llegado con poco margen entre ellas. ¿Cómo decides a cuál atender primero?",
     "respuestas_tipo": {}
