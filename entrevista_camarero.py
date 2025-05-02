@@ -123,5 +123,5 @@ enviar_a_monday(
             ciudad=ciudad
         )
 
-        st.success("✅ Entrevista registrada correctamente.")
-        st.markdown("Gracias por completar tu entrevista. Nos pondremos en contacto contigo.")
+st.success("✅ Entrevista registrada correctamente.")
+st.markdown("Gracias por completar tu entrevista. Nos pondremos en contacto contigo.")
