@@ -38,17 +38,18 @@ if "page" not in st.session_state:
     st.session_state.puntuaciones = []
     st.session_state.evaluaciones = []
     st.session_state.tiempos = []
-            st.session_state.start_time = time.time()
+                    st.session_state.start_time = time.time()
     st.session_state.index = 0
     st.session_state.respuestas = []
     st.session_state.puntuaciones = []
     st.session_state.evaluaciones = []
     st.session_state.tiempos = []
-            st.session_state.start_time = time.time()
+                    st.session_state.start_time = time.time()
 
 # Mostrar pregunta actual
 if st.session_state.page == 0:
     st.stop()
+
 elif st.session_state.page <= len(preguntas):
     actual = preguntas[st.session_state.page - 1]
     st.subheader(f"{actual['categoria']} - Pregunta {st.session_state.index + 1}")
@@ -60,19 +61,19 @@ elif st.session_state.page <= len(preguntas):
     st.caption(f"⏳ Tiempo restante: {tiempo_restante} segundos")
 
     col1, col2 = st.columns([2, 1])
-    avanzar = col1.button("Enviar respuesta", key="enviar")
+        avanzar = col1.button("Enviar respuesta", key="enviar")
 
-    if avanzar or tiempo_restante == 0:
-                st.session_state.respuestas.append({
+        if avanzar or tiempo_restante == 0:
+                        st.session_state.respuestas.append({
             "pregunta": actual["pregunta"],
             "respuesta": respuesta,
             "respuestas_tipo": actual["respuestas_tipo"],
             "categoria": actual["categoria"]
         })
-                st.session_state.tiempos.append(tiempo_transcurrido)
-                st.session_state.page += 1
-                st.session_state.start_time = time.time()
-                st.experimental_rerun()
+                        st.session_state.tiempos.append(tiempo_transcurrido)
+                        st.session_state.page += 1
+                        st.session_state.start_time = time.time()
+                        st.experimental_rerun()
 
 # Finalizar entrevista
 else:
