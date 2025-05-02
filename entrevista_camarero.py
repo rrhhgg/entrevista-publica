@@ -9,11 +9,9 @@ import re
 
 st.set_page_config(page_title="Entrevista Camarero", layout="centered")
 
-# Logo
 logo = Image.open("logo gg.png")
 st.image(logo, use_container_width=True)
 
-# Datos personales
 st.title("Entrevista Camarero")
 st.subheader("Datos del candidato")
 nombre = st.text_input("Nombre completo")
@@ -28,7 +26,6 @@ puerta = st.text_input("Puerta / Piso")
 cp = st.text_input("Código Postal")
 ciudad = st.text_input("Ciudad")
 
-# Cargar preguntas
 with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
     preguntas = json.load(f)
 
@@ -38,21 +35,17 @@ if "page" not in st.session_state:
     st.session_state.puntuaciones = []
     st.session_state.evaluaciones = []
     st.session_state.tiempos = []
-                    st.session_state.start_time = time.time()
-    st.session_state.index = 0
-    st.session_state.respuestas = []
-    st.session_state.puntuaciones = []
-    st.session_state.evaluaciones = []
-    st.session_state.tiempos = []
-                    st.session_state.start_time = time.time()
+    st.session_state.start_time = time.time()
 
-# Mostrar pregunta actual
 if st.session_state.page == 0:
-    st.stop()
+    if st.button("Comenzar entrevista"):
+        st.session_state.page += 1
+        st.session_state.start_time = time.time()
+        st.experimental_rerun()
 
 elif st.session_state.page <= len(preguntas):
     actual = preguntas[st.session_state.page - 1]
-    st.subheader(f"{actual['categoria']} - Pregunta {st.session_state.index + 1}")
+    st.subheader(f"{actual['categoria']} - Pregunta {st.session_state.page}")
     st.write(actual["pregunta"])
 
     respuesta = st.text_area("Tu respuesta", key=f"respuesta_{st.session_state.page}")
@@ -61,27 +54,24 @@ elif st.session_state.page <= len(preguntas):
     st.caption(f"⏳ Tiempo restante: {tiempo_restante} segundos")
 
     col1, col2 = st.columns([2, 1])
-        avanzar = col1.button("Enviar respuesta", key="enviar")
+    avanzar = col1.button("Enviar respuesta", key=f"enviar_{st.session_state.page}")
 
-        if avanzar or tiempo_restante == 0:
-                        st.session_state.respuestas.append({
+    if avanzar or tiempo_restante == 0:
+        st.session_state.respuestas.append({
             "pregunta": actual["pregunta"],
             "respuesta": respuesta,
             "respuestas_tipo": actual["respuestas_tipo"],
             "categoria": actual["categoria"]
         })
-                        st.session_state.tiempos.append(tiempo_transcurrido)
-                        st.session_state.page += 1
-                        st.session_state.start_time = time.time()
-                        st.experimental_rerun()
+        st.session_state.tiempos.append(tiempo_transcurrido)
+        st.session_state.page += 1
+        st.session_state.start_time = time.time()
+        st.experimental_rerun()
 
-# Finalizar entrevista
 else:
     with st.spinner("Evaluando respuestas..."):
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
-        resultados = []
         total_puntos = 0
-
         for r in st.session_state.respuestas:
             prompt = f"Pregunta: {r['pregunta']}\n\nRespuestas tipo:\n"
             for clave, valor in r["respuestas_tipo"].items():
@@ -110,11 +100,10 @@ else:
             st.session_state.evaluaciones.append(result_text[:500])
             total_puntos += puntuacion
 
-        total_puntos = sum(st.session_state.puntuaciones)
         resumen = " ".join(st.session_state.evaluaciones)
         tiempo_total = sum(st.session_state.tiempos)
 
-enviar_a_monday(
+        enviar_a_monday(
             nombre=nombre,
             puesto="Camarero",
             puntuacion_total=total_puntos,
@@ -133,5 +122,5 @@ enviar_a_monday(
             ciudad=ciudad
         )
 
-st.success("✅ Entrevista registrada correctamente.")
-st.markdown("Gracias por completar tu entrevista. Nos pondremos en contacto contigo.")
+        st.success("✅ Entrevista registrada correctamente.")
+        st.markdown("Gracias por completar tu entrevista. Nos pondremos en contacto contigo.")
