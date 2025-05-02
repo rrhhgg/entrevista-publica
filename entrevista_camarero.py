@@ -39,9 +39,8 @@ if "page" not in st.session_state:
 
 if st.session_state.page == 0:
     if st.button("Comenzar entrevista"):
-        st.session_state.page += 1
+        st.session_state.page = 1
         st.session_state.start_time = time.time()
-        st.experimental_rerun()
 
 elif st.session_state.page <= len(preguntas):
     actual = preguntas[st.session_state.page - 1]
