@@ -32,21 +32,29 @@ ciudad = st.text_input("Ciudad")
 with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
     preguntas = json.load(f)
 
-if "index" not in st.session_state:
+if "page" not in st.session_state:
+    st.session_state.page = 0
+    st.session_state.respuestas = []
+    st.session_state.puntuaciones = []
+    st.session_state.evaluaciones = []
+    st.session_state.tiempos = []
+            st.session_state.start_time = time.time()
     st.session_state.index = 0
     st.session_state.respuestas = []
     st.session_state.puntuaciones = []
     st.session_state.evaluaciones = []
     st.session_state.tiempos = []
-    st.session_state.start_time = time.time()
+            st.session_state.start_time = time.time()
 
 # Mostrar pregunta actual
-if st.session_state.index < len(preguntas):
-    actual = preguntas[st.session_state.index]
+if st.session_state.page == 0:
+    st.stop()
+elif st.session_state.page <= len(preguntas):
+    actual = preguntas[st.session_state.page - 1]
     st.subheader(f"{actual['categoria']} - Pregunta {st.session_state.index + 1}")
     st.write(actual["pregunta"])
 
-    respuesta = st.text_area("Tu respuesta", key=f"respuesta_{st.session_state.index}")
+    respuesta = st.text_area("Tu respuesta", key=f"respuesta_{st.session_state.page}")
     tiempo_transcurrido = int(time.time() - st.session_state.start_time)
     tiempo_restante = max(0, 120 - tiempo_transcurrido)
     st.caption(f"⏳ Tiempo restante: {tiempo_restante} segundos")
@@ -55,16 +63,16 @@ if st.session_state.index < len(preguntas):
     avanzar = col1.button("Enviar respuesta", key="enviar")
 
     if avanzar or tiempo_restante == 0:
-        st.session_state.respuestas.append({
+                st.session_state.respuestas.append({
             "pregunta": actual["pregunta"],
             "respuesta": respuesta,
             "respuestas_tipo": actual["respuestas_tipo"],
             "categoria": actual["categoria"]
         })
-        st.session_state.tiempos.append(tiempo_transcurrido)
-        st.session_state.index += 1
-        st.session_state.start_time = time.time()
-        st.experimental_rerun()
+                st.session_state.tiempos.append(tiempo_transcurrido)
+                st.session_state.page += 1
+                st.session_state.start_time = time.time()
+                st.experimental_rerun()
 
 # Finalizar entrevista
 else:
@@ -101,6 +109,7 @@ else:
             st.session_state.evaluaciones.append(result_text[:500])
             total_puntos += puntuacion
 
+        total_puntos = sum(st.session_state.puntuaciones)
         resumen = " ".join(st.session_state.evaluaciones)
         tiempo_total = sum(st.session_state.tiempos)
 
