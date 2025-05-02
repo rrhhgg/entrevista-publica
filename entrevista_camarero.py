@@ -1,21 +1,21 @@
 import streamlit as st
 import openai
 import json
+import time
 from datetime import datetime
 from enviar_a_monday import enviar_a_monday
 from PIL import Image
 import re
 
-st.set_page_config(page_title="Entrevista Camarero (Final)", layout="centered")
+st.set_page_config(page_title="Entrevista Camarero", layout="centered")
 
-# Mostrar logo
+# Logo
 logo = Image.open("logo gg.png")
 st.image(logo, use_container_width=True)
 
-st.title("Entrevista Camarero")
-st.write("Por favor, completa tus datos personales antes de comenzar la entrevista.")
-
 # Datos personales
+st.title("Entrevista Camarero")
+st.subheader("Datos del candidato")
 nombre = st.text_input("Nombre completo")
 telefono = st.text_input("Teléfono de contacto")
 email = st.text_input("Correo electrónico")
@@ -28,93 +28,100 @@ puerta = st.text_input("Puerta / Piso")
 cp = st.text_input("Código Postal")
 ciudad = st.text_input("Ciudad")
 
-# Cargar estructura de preguntas
+# Cargar preguntas
 with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
     preguntas = json.load(f)
 
-respuestas_usuario = []
+if "index" not in st.session_state:
+    st.session_state.index = 0
+    st.session_state.respuestas = []
+    st.session_state.puntuaciones = []
+    st.session_state.evaluaciones = []
+    st.session_state.tiempos = []
+    st.session_state.start_time = time.time()
 
-for i, item in enumerate(preguntas):
-    st.subheader(f"{item['categoria']} - Pregunta {i + 1}")
-    st.write(item["pregunta"])
-    respuesta = st.text_area(f"Tu respuesta", key=f"respuesta_{i}")
-    respuestas_usuario.append({
-        "categoria": item["categoria"],
-        "pregunta": item["pregunta"],
-        "respuesta": respuesta,
-        "respuestas_tipo": item["respuestas_tipo"]
-    })
+# Mostrar pregunta actual
+if st.session_state.index < len(preguntas):
+    actual = preguntas[st.session_state.index]
+    st.subheader(f"{actual['categoria']} - Pregunta {st.session_state.index + 1}")
+    st.write(actual["pregunta"])
 
-if st.button("Evaluar entrevista"):
-    if not all([nombre, telefono, email, nombre_calle, numero, cp, ciudad]):
-        st.warning("⚠️ Por favor, completa todos los datos personales obligatorios.")
-    else:
+    respuesta = st.text_area("Tu respuesta", key=f"respuesta_{st.session_state.index}")
+    tiempo_transcurrido = int(time.time() - st.session_state.start_time)
+    tiempo_restante = max(0, 120 - tiempo_transcurrido)
+    st.caption(f"⏳ Tiempo restante: {tiempo_restante} segundos")
+
+    col1, col2 = st.columns([2, 1])
+    avanzar = col1.button("Enviar respuesta", key="enviar")
+
+    if avanzar or tiempo_restante == 0:
+        st.session_state.respuestas.append({
+            "pregunta": actual["pregunta"],
+            "respuesta": respuesta,
+            "respuestas_tipo": actual["respuestas_tipo"],
+            "categoria": actual["categoria"]
+        })
+        st.session_state.tiempos.append(tiempo_transcurrido)
+        st.session_state.index += 1
+        st.session_state.start_time = time.time()
+        st.experimental_rerun()
+
+# Finalizar entrevista
+else:
+    with st.spinner("Evaluando respuestas..."):
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
         resultados = []
-        puntuaciones = []
-        evaluaciones = []
-        puntuacion_total = 0
+        total_puntos = 0
 
-        for i, item in enumerate(respuestas_usuario):
-            prompt = f"""
-Eres un evaluador de entrevistas para Grupo Gómez SL.
-
-Pregunta:
-{item['pregunta']}
-
-Respuestas tipo:
-"""
-            for clave, valor in item["respuestas_tipo"].items():
+        for r in st.session_state.respuestas:
+            prompt = f"Pregunta: {r['pregunta']}\n\nRespuestas tipo:\n"
+            for clave, valor in r["respuestas_tipo"].items():
                 prompt += f"{clave}. {valor}\n"
-            prompt += f"""
-
-Respuesta del candidato:
-{item['respuesta']}
-
-Devuelve solo:
-- Puntuación (número)
-- Número de respuesta tipo más similar
-- Justificación breve
-"""
+            prompt += f"\nRespuesta del candidato:\n{r['respuesta']}\n\nDevuelve:\n- Puntuación\n- Respuesta tipo más cercana\n- Justificación breve"
 
             try:
                 response = client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "Eres un evaluador preciso y objetivo."},
+                        {"role": "system", "content": "Eres un evaluador objetivo."},
                         {"role": "user", "content": prompt}
                     ]
                 )
-                resultado_texto = response.choices[0].message.content
+                result_text = response.choices[0].message.content
             except Exception as e:
-                resultado_texto = f"Error al evaluar: {e}"
+                result_text = f"Error: {e}"
 
             try:
-                match = re.search(r"\b(10|[2-9])\b", resultado_texto)
+                match = re.search(r"\b(10|[2-9])\b", result_text)
                 puntuacion = int(match.group(1)) if match else 0
             except:
                 puntuacion = 0
 
-            puntuaciones.append(puntuacion)
-            evaluaciones.append(resultado_texto[:500])
-            puntuacion_total += puntuacion
+            st.session_state.puntuaciones.append(puntuacion)
+            st.session_state.evaluaciones.append(result_text[:500])
+            total_puntos += puntuacion
 
-            resultados.append({
-                "categoria": item["categoria"],
-                "pregunta": item["pregunta"],
-                "evaluacion": resultado_texto,
-                "puntuacion": puntuacion
-            })
+        resumen = " ".join(st.session_state.evaluaciones)
+        tiempo_total = sum(st.session_state.tiempos)
 
-        resumen_general = " ".join([r['evaluacion'] for r in resultados])
-        respuesta_monday = enviar_a_monday(
+enviar_a_monday(
             nombre=nombre,
             puesto="Camarero",
-            puntuacion_total=puntuacion_total,
-            evaluacion_texto=resumen_general,
+            puntuacion_total=total_puntos,
+            evaluacion_texto=resumen,
             correo_entrevistador=None,
-            puntuaciones=puntuaciones,
-            evaluaciones=evaluaciones
+            puntuaciones=st.session_state.puntuaciones,
+            evaluaciones=st.session_state.evaluaciones,
+            tiempo_total=tiempo_total,
+            telefono=telefono,
+            email=email,
+            via=via,
+            calle=nombre_calle,
+            numero=numero,
+            puerta=puerta,
+            cp=cp,
+            ciudad=ciudad
         )
-        st.success("✅ Entrevista registrada en Monday.com")
-        st.markdown("Gracias por completar tu entrevista. Pronto nos pondremos en contacto contigo.")
+
+        st.success("✅ Entrevista registrada correctamente.")
+        st.markdown("Gracias por completar tu entrevista. Nos pondremos en contacto contigo.")
