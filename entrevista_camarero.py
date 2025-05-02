@@ -14,7 +14,6 @@ st.image(logo, use_container_width=True)
 
 st.title("Entrevista Camarero")
 
-# Inicializar estado
 if "page" not in st.session_state:
     st.session_state.page = 0
     st.session_state.respuestas = []
@@ -23,11 +22,9 @@ if "page" not in st.session_state:
     st.session_state.tiempos = []
     st.session_state.start_time = time.time()
 
-# Cargar preguntas
 with open("estructura_preguntas_camarero.json", encoding="utf-8") as f:
     preguntas = json.load(f)
 
-# Página 0: datos personales
 if st.session_state.page == 0:
     st.subheader("Datos del candidato")
     st.session_state.nombre = st.text_input("Nombre completo")
@@ -46,18 +43,16 @@ if st.session_state.page == 0:
         st.session_state.page = 1
         st.session_state.start_time = time.time()
 
-# Páginas de preguntas
 elif 1 <= st.session_state.page <= len(preguntas):
     actual = preguntas[st.session_state.page - 1]
     st.subheader(f"{actual['categoria']} - Pregunta {st.session_state.page}")
     st.write(actual["pregunta"])
 
     respuesta = st.text_area("Tu respuesta", key=f"respuesta_{st.session_state.page}")
-    tiempo_transcurrido = int(time.time() - st.session_state.start_time)
-    tiempo_restante = max(0, 120 - tiempo_transcurrido)
-    st.caption(f"⏳ Tiempo restante: {tiempo_restante} segundos")
+    st.caption("⏱ Tiempo máximo para esta respuesta: 120 segundos")
 
     if st.button("Enviar respuesta"):
+        tiempo_transcurrido = int(time.time() - st.session_state.start_time)
         st.session_state.respuestas.append({
             "pregunta": actual["pregunta"],
             "respuesta": respuesta,
@@ -68,7 +63,6 @@ elif 1 <= st.session_state.page <= len(preguntas):
         st.session_state.page += 1
         st.session_state.start_time = time.time()
 
-# Evaluación final
 else:
     with st.spinner("Evaluando respuestas..."):
         client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
@@ -105,6 +99,10 @@ else:
         resumen = " ".join(st.session_state.evaluaciones)
         tiempo_total = sum(st.session_state.tiempos)
 
+        telefono_final = st.session_state.telefono.strip()
+        if not telefono_final.startswith("+"):
+            telefono_final = "+34 " + telefono_final
+
         enviar_a_monday(
             nombre=st.session_state.nombre,
             puesto="Camarero",
@@ -114,7 +112,7 @@ else:
             puntuaciones=st.session_state.puntuaciones,
             evaluaciones=st.session_state.evaluaciones,
             tiempo_total=tiempo_total,
-            telefono=st.session_state.telefono,
+            telefono=telefono_final,
             email=st.session_state.email,
             via=st.session_state.via,
             calle=st.session_state.nombre_calle,
