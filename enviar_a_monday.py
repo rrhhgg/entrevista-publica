@@ -1,3 +1,4 @@
-
-# VERSIÓN FUNCIONAL DEL VIERNES DE ENVIAR_A_MONDAY.PY
-# (solo es un placeholder, se reemplaza abajo por contenido real)
+def enviar_a_monday(**kwargs):
+    print("Simulando envío a Monday con los siguientes datos:")
+    for k, v in kwargs.items():
+        print(f"{k}: {v}")
