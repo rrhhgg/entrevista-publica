@@ -1,5 +1,7 @@
+
 import requests
 import json
+import datetime
 import streamlit as st
 
 def enviar_a_monday(
@@ -7,56 +9,69 @@ def enviar_a_monday(
     puesto,
     puntuacion_total,
     evaluacion_texto,
-    fecha_actual,
     entrevistador_id,
+    fecha_entrevista,
     respuestas_puntuaciones,
     respuestas_evaluaciones,
-    datos_personales,
+    telefono,
+    correo,
+    via,
+    nombre_via,
+    numero,
+    puerta,
+    cp,
+    ciudad,
     tiempo_total
 ):
-    api_url = "https://api.monday.com/v2"
-    headers = {
-        "Authorization": st.secrets["monday_api_key"],
-        "Content-Type": "application/json"
-    }
+    api_key = st.secrets["monday_api_key"]
+    board_id = st.secrets["monday_board_id"]
 
+    # Construir el diccionario de valores para cada columna
     column_values = {
+        "name": nombre,
+        "multiple_person_mkqhdm94": {"personsAndTeams": [{"id": entrevistador_id, "kind": "person"}]},
         "dropdown_mkqhgq7t": {"labels": [puesto]},
-        "date": {"date": fecha_actual},
+        "date": {"date": fecha_entrevista},
         "numeric_mkqhfqy3": puntuacion_total,
         "text_mkqhc1ck": evaluacion_texto,
-        "multiple_person_mkqhdm94": {"personsAndTeams": [{"id": entrevistador_id, "kind": "person"}]},
-        "dropdown_mkqjbykm": {"labels": [datos_personales["via"]]},
-        "text_mkqjmeh1": datos_personales["nombre_via"],
-        "numeric_mkqjjj0g": int(datos_personales["numero"]),
-        "text_mkqjwkmz": datos_personales["puerta"],
-        "numeric_mkqjwczq": int(datos_personales["cp"]),
-        "text_mkqjx0sz": datos_personales["ciudad"],
-        "phone_mkqjgqhj": {"phone": datos_personales["telefono"]},
-        "email_mkqjt99t": {"email": datos_personales["correo"]},
+        "phone_mkqjgqhj": {"phone": telefono, "countryShortName": "ES"},
+        "email_mkqjt99t": correo,
+        "dropdown_mkqjbykm": {"label": via},
+        "text_mkqjmeh1": nombre_via,
+        "numeric_mkqjjj0g": numero,
+        "text_mkqjwkmz": puerta,
+        "numeric_mkqjwczq": cp,
+        "text_mkqjx0sz": ciudad,
         "numeric_mkqjs2kq": tiempo_total
     }
 
+    # Añadir dinámicamente las respuestas individuales (puntuaciones y evaluaciones)
     column_values.update(respuestas_puntuaciones)
     column_values.update(respuestas_evaluaciones)
 
     query = """
-    mutation ($itemName: String!, $columnVals: JSON!) {
-      create_item (
-        board_id: 4459466340,
-        item_name: $itemName,
-        column_values: $columnVals
-      ) {
-        id
-      }
+    mutation ($board_id: Int!, $item_name: String!, $column_values: JSON!) {
+        create_item (board_id:$board_id, item_name:$item_name, column_values:$column_values) {
+            id
+        }
     }
     """
 
     variables = {
-        "itemName": nombre,
-        "columnVals": json.dumps(column_values)
+        "board_id": int(board_id),
+        "item_name": nombre,
+        "column_values": json.dumps(column_values)
     }
 
-    data = {"query": query, "variables": variables}
-    response = requests.post(api_url, headers=headers, json=data)
+    headers = {
+        "Authorization": api_key,
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(
+        url="https://api.monday.com/v2",
+        json={"query": query, "variables": variables},
+        headers=headers
+    )
+
     return response.json()
